@@ -10,6 +10,7 @@
   #include "html_pixart.h"
 #endif
 #include "html_cpal.h"
+#include "html_plates.h"
 
 /*
  * Integrated HTTP web server page declarations
@@ -401,6 +402,15 @@ void initServer()
     if (handleFileRead(request, "/cpal.htm")) return;
     if (handleIfNoneMatchCacheHeader(request)) return;
     AsyncWebServerResponse *response = request->beginResponse_P(200, "text/html", PAGE_cpal, PAGE_cpal_L);
+    response->addHeader(FPSTR(s_content_enc),"gzip");
+    setStaticContentCacheHeaders(response);
+    request->send(response);
+  });
+
+  server.on("/plates.htm", HTTP_GET, [](AsyncWebServerRequest *request){
+    if (handleFileRead(request, "/plates.htm")) return;
+    if (handleIfNoneMatchCacheHeader(request)) return;
+    AsyncWebServerResponse *response = request->beginResponse_P(200, "text/html", PAGE_plates, PAGE_plates_L);
     response->addHeader(FPSTR(s_content_enc),"gzip");
     setStaticContentCacheHeaders(response);
     request->send(response);
